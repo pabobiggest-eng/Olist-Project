@@ -1,0 +1,4 @@
+column,Q1,Q3,IQR,lower_bound,upper_bound,outlier_count,outlier_percentage
+total_items,1.0,1.0,0.0,1.0,1.0,9803,9.94
+order_item_value,45.9,149.9,104.0,-110.1,305.9,7913,8.02
+total_freight_value,13.85,24.04,10.19,-1.4350000000000005,39.325,9941,10.08

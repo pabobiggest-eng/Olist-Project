@@ -1,0 +1,21 @@
+,Missing Values,Missing Percentage
+order_id,0,0.0
+customer_id,0,0.0
+customer_unique_id,0,0.0
+order_status,0,0.0
+order_purchase_timestamp,0,0.0
+order_month,0,0.0
+cohort_month,0,0.0
+customer_city,0,0.0
+customer_state,0,0.0
+total_items,775,0.78
+order_item_value,775,0.78
+total_freight_value,775,0.78
+order_approved_at,160,0.16
+order_delivered_carrier_date,1783,1.79
+order_delivered_customer_date,2965,2.98
+order_estimated_delivery_date,0,0.0
+Purchase_Month,0,0.0
+First_Purchase_Date,0,0.0
+Cohort_Month,0,0.0
+Cohort_Index,0,0.0

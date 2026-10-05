@@ -1,0 +1,21 @@
+Column,Unique Values
+order_id,99441
+customer_id,99441
+customer_unique_id,96096
+order_status,8
+order_purchase_timestamp,98875
+order_month,25
+cohort_month,25
+customer_city,4119
+customer_state,27
+total_items,17
+order_item_value,7621
+total_freight_value,7698
+order_approved_at,90733
+order_delivered_carrier_date,81018
+order_delivered_customer_date,95664
+order_estimated_delivery_date,459
+Purchase_Month,25
+First_Purchase_Date,95837
+Cohort_Month,25
+Cohort_Index,20

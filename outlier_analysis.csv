@@ -1,0 +1,5 @@
+Column,Q1,Q3,IQR,Outlier Count
+total_items,1.0,1.0,0.0,9803
+order_item_value,45.9,149.9,104.0,7913
+total_freight_value,13.85,24.04,10.19,9941
+Cohort_Index,1.0,1.0,0.0,2023
