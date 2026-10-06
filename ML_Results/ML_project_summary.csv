@@ -1,0 +1,10 @@
+Item,Value
+Dataset Rows,99441
+Dataset Columns,22
+Number of Features,4
+Best Model,Random Forest
+Accuracy,0.8986877168283977
+Precision,0.2837290098436595
+Recall,0.3864353312302839
+F1 Score,0.327212020033389
+ROC-AUC,0.7146514603013422
