@@ -1,3 +1,4 @@
+
 # ============================================================
 # OLIST FINAL EXPERT ML
 # ============================================================
@@ -33,10 +34,8 @@ warnings.filterwarnings("ignore")
 # ============================================================
 
 DATA_FILENAME = "olist_cohort_analysis_dataset.csv"
-
 RANDOM_STATE = 42
 N_SPLITS = 5
-
 CORR_THRESHOLD = 0.90
 VIF_THRESHOLD = 10.0
 MISSING_THRESHOLD = 0.50
@@ -50,13 +49,13 @@ CURRENT_DIR = Path.cwd()
 # ============================================================
 
 def find_dataset():
-    locations = [
+    places = [
         CURRENT_DIR / DATA_FILENAME,
         SCRIPT_DIR / DATA_FILENAME,
         SCRIPT_DIR.parent / DATA_FILENAME
     ]
 
-    for path in locations:
+    for path in places:
         if path.is_file():
             return path
 
@@ -102,12 +101,10 @@ def ratio(one_time, repeat):
 
 def class_table(y, stage):
     y = pd.Series(y)
-
     counts = y.value_counts().reindex(
         [0, 1],
         fill_value=0
     )
-
     total = len(y)
 
     return pd.DataFrame({
@@ -118,8 +115,8 @@ def class_table(y, stage):
             int(counts.loc[1])
         ],
         "Percentage": [
-            counts.loc[0] / total * 100 if total else 0,
-            counts.loc[1] / total * 100 if total else 0
+            counts.loc[0] / total * 100,
+            counts.loc[1] / total * 100
         ]
     })
 
@@ -153,21 +150,14 @@ def high_corr_pairs(df, threshold):
         )
 
     corr = df.corr()
-
     rows = []
 
     for i, first in enumerate(corr.columns):
-
-        for j in range(
-            i + 1,
-            len(corr.columns)
-        ):
-
+        for j in range(i + 1, len(corr.columns)):
             second = corr.columns[j]
             value = corr.iloc[i, j]
 
             if pd.notna(value) and abs(value) >= threshold:
-
                 rows.append({
                     "Feature_1": first,
                     "Feature_2": second,
@@ -194,11 +184,7 @@ def high_corr_pairs(df, threshold):
 def vif_table(df):
     if df.shape[1] < 2:
         return pd.DataFrame(
-            columns=[
-                "Feature",
-                "VIF",
-                "Status"
-            ]
+            columns=["Feature", "VIF", "Status"]
         )
 
     clean = diagnostic_impute(df)
@@ -215,41 +201,27 @@ def vif_table(df):
 
     if clean.shape[1] < 2:
         return pd.DataFrame(
-            columns=[
-                "Feature",
-                "VIF",
-                "Status"
-            ]
+            columns=["Feature", "VIF", "Status"]
         )
 
     rows = []
 
     for i, feature in enumerate(clean.columns):
-
         try:
             value = variance_inflation_factor(
                 clean.values,
                 i
             )
-
         except Exception:
-
             value = np.inf
 
         if np.isinf(value):
-
             status = "Severe / Infinite"
-
         elif value >= VIF_THRESHOLD:
-
             status = "High"
-
         elif value >= 5:
-
             status = "Moderate"
-
         else:
-
             status = "Acceptable"
 
         rows.append({
@@ -268,18 +240,11 @@ def is_id(column):
     name = str(column).lower().strip()
 
     exact = {
-        "customer_id",
-        "customer_unique_id",
-        "customer_identifier",
-        "order_id",
-        "order_identifier",
-        "order_number",
-        "seller_id",
-        "product_id",
-        "review_id",
-        "payment_id",
-        "postal_code",
-        "zip_code"
+        "customer_id", "customer_unique_id",
+        "customer_identifier", "order_id",
+        "order_identifier", "order_number",
+        "seller_id", "product_id", "review_id",
+        "payment_id", "postal_code", "zip_code"
     }
 
     if name in exact:
@@ -298,16 +263,11 @@ def is_leakage(column):
     name = str(column).lower().strip()
 
     exact = {
-        "repeat_customer",
-        "order_count",
-        "total_orders",
-        "customer_order_count",
-        "lifetime_orders",
-        "future_orders",
-        "future_purchases",
-        "next_order",
-        "next_purchase",
-        "target"
+        "repeat_customer", "order_count",
+        "total_orders", "customer_order_count",
+        "lifetime_orders", "future_orders",
+        "future_purchases", "next_order",
+        "next_purchase", "target"
     }
 
     if name in exact:
@@ -340,25 +300,16 @@ df = pd.read_csv(
 )
 
 OUTPUT_DIR = DATA_FILE.parent / "ML_Results"
-
 TABLE_DIR = OUTPUT_DIR / "tables"
 PLOT_DIR = OUTPUT_DIR / "plots"
 
-TABLE_DIR.mkdir(
-    parents=True,
-    exist_ok=True
-)
-
-PLOT_DIR.mkdir(
-    parents=True,
-    exist_ok=True
-)
+TABLE_DIR.mkdir(parents=True, exist_ok=True)
+PLOT_DIR.mkdir(parents=True, exist_ok=True)
 
 print("\nDataset loaded successfully.")
-print("Dataset path :", DATA_FILE)
-print("Rows         :", len(df))
-print("Columns      :", len(df.columns))
-print("Results path :", OUTPUT_DIR)
+print("Dataset:", DATA_FILE)
+print("Rows   :", len(df))
+print("Columns:", len(df.columns))
 
 
 # ============================================================
@@ -366,9 +317,7 @@ print("Results path :", OUTPUT_DIR)
 # ============================================================
 
 procedure = pd.DataFrame({
-
     "Step": range(1, 13),
-
     "Procedure": [
         "Load data",
         "Detect customer/order columns",
@@ -383,7 +332,6 @@ procedure = pd.DataFrame({
         "Evaluate on untouched test set",
         "Save all tables, plots and documentation"
     ],
-
     "Strategy": [
         "Use Olist cohort dataset",
         "Use IDs only for grouping/target construction",
@@ -401,22 +349,12 @@ procedure = pd.DataFrame({
 })
 
 components = pd.DataFrame({
-
     "Component": [
-        "Python",
-        "Pandas",
-        "NumPy",
-        "Matplotlib",
-        "Scikit-learn",
-        "Statsmodels",
-        "Imbalanced-learn",
-        "Target",
-        "Split",
-        "Balancing",
-        "Models",
-        "Primary Metric"
+        "Python", "Pandas", "NumPy", "Matplotlib",
+        "Scikit-learn", "Statsmodels", "Imbalanced-learn",
+        "Target", "Split", "Balancing",
+        "Models", "Primary Metric"
     ],
-
     "Purpose": [
         "Programming",
         "Data processing",
@@ -428,7 +366,7 @@ components = pd.DataFrame({
         "Repeat vs One-Time classification",
         "Customer-level grouped split",
         "SMOTE on training only",
-        "Logistic Regression, Random Forest, Gradient Boosting",
+        "Logistic, Random Forest, Gradient Boosting",
         "PR-AUC for imbalanced classification"
     ]
 })
@@ -477,7 +415,8 @@ if order_col is None:
         "Order column not found."
     )
 
-# Count DISTINCT orders per customer.
+# Distinct order count prevents item-level rows from falsely
+# making one order look like repeated orders.
 distinct_orders = (
     df.groupby(customer_col)[order_col]
     .nunique()
@@ -502,18 +441,12 @@ full_counts = (
     )
 )
 
-one_time_full = int(
-    full_counts.loc[0]
-)
-
-repeat_full = int(
-    full_counts.loc[1]
-)
+one_time_full = int(full_counts.loc[0])
+repeat_full = int(full_counts.loc[1])
 
 print("\nTARGET")
 print("One-Time:", one_time_full)
 print("Repeat  :", repeat_full)
-
 print(
     "One-Time : Repeat:",
     ratio(
@@ -543,76 +476,48 @@ for column in df.columns:
     reason = "Eligible numeric predictor"
 
     if column == TARGET:
-
         decision = "SKIP"
         reason = "Target variable"
 
     elif is_id(column):
-
         decision = "SKIP"
         reason = "Identifier / key column"
 
     elif is_leakage(column):
-
         decision = "SKIP"
-        reason = (
-            "Target-derived or future-information leakage risk"
-        )
+        reason = "Target-derived or future-information leakage risk"
 
     elif not pd.api.types.is_numeric_dtype(
         df[column]
     ):
-
         decision = "SKIP"
-        reason = (
-            "Non-numeric categorical/text column"
-        )
+        reason = "Non-numeric categorical/text column"
 
     elif df[column].nunique(
         dropna=True
     ) <= 1:
-
         decision = "SKIP"
-        reason = (
-            "Constant / single-value column"
-        )
+        reason = "Constant / single-value column"
 
     elif df[column].isna().mean() >= MISSING_THRESHOLD:
-
         decision = "SKIP"
-        reason = (
-            "50% or more values missing"
-        )
+        reason = "50% or more values missing"
 
     audit_rows.append({
-
-        "Column":
-            column,
-
-        "Data_Type":
-            str(df[column].dtype),
-
-        "Missing_Count":
-            int(df[column].isna().sum()),
-
-        "Missing_Percentage":
-            round(
-                df[column].isna().mean() * 100,
-                4
-            ),
-
-        "Unique_Count":
-            int(
-                df[column].nunique(
-                    dropna=True
-                )
-            ),
-
-        "Decision":
-            decision,
-
-        "Reason":
-            reason
+        "Column": column,
+        "Data_Type": str(df[column].dtype),
+        "Missing_Count": int(
+            df[column].isna().sum()
+        ),
+        "Missing_Percentage": round(
+            df[column].isna().mean() * 100,
+            4
+        ),
+        "Unique_Count": int(
+            df[column].nunique(dropna=True)
+        ),
+        "Decision": decision,
+        "Reason": reason
     })
 
 audit_df = pd.DataFrame(
@@ -630,48 +535,31 @@ save_csv(
 )
 
 print("\nFEATURE AUDIT")
-
-print(
-    "Total columns:",
-    len(df.columns)
-)
-
-print(
-    "Candidate features:",
-    len(candidate_features)
-)
+print("Total columns:", len(df.columns))
+print("Candidate features:", len(candidate_features))
 
 print("\nUSED INITIALLY:")
-
 for feature in candidate_features:
-    print(
-        " +",
-        feature
-    )
+    print(" +", feature)
 
 print("\nSKIPPED + REASON:")
-
 for _, row in audit_df[
     audit_df["Decision"] == "SKIP"
 ].iterrows():
-
     print(
-        f" - {row['Column']} -> "
-        f"{row['Reason']}"
+        f" - {row['Column']} -> {row['Reason']}"
     )
 
 
 # ============================================================
-# 5. CUSTOMER-LEVEL TRAIN / TEST SPLIT
+# 5. TRAIN / TEST SPLIT
 # ============================================================
 
 X_candidate = df[
     candidate_features
 ].copy()
 
-y = df[
-    TARGET
-].copy()
+y = df[TARGET].copy()
 
 groups = df[
     customer_col
@@ -684,7 +572,6 @@ splitter = StratifiedGroupKFold(
 )
 
 try:
-
     train_idx, test_idx = next(
         splitter.split(
             X_candidate,
@@ -692,11 +579,10 @@ try:
             groups
         )
     )
-
 except ValueError as exc:
-
     raise ValueError(
-        "Customer-level stratified split failed."
+        "Customer-level stratified split failed. "
+        "There may be too few repeat-customer groups."
     ) from exc
 
 X_train_candidate = X_candidate.iloc[
@@ -715,41 +601,29 @@ y_test = y.iloc[
     test_idx
 ].copy()
 
-train_customers = groups.iloc[
+train_customer_ids = groups.iloc[
     train_idx
 ].unique()
 
-test_customers = groups.iloc[
+test_customer_ids = groups.iloc[
     test_idx
 ].unique()
 
 overlap = set(
-    train_customers
+    train_customer_ids
 ).intersection(
-    set(test_customers)
+    set(test_customer_ids)
 )
 
 if overlap:
-
     raise RuntimeError(
         "Customer leakage detected."
     )
 
 print("\nSPLIT")
-print(
-    "Training rows:",
-    len(X_train_candidate)
-)
-
-print(
-    "Testing rows:",
-    len(X_test_candidate)
-)
-
-print(
-    "Customer overlap:",
-    len(overlap)
-)
+print("Training rows:", len(X_train_candidate))
+print("Testing rows :", len(X_test_candidate))
+print("Customer overlap:", len(overlap))
 
 save_csv(
     pd.concat(
@@ -770,7 +644,7 @@ save_csv(
 
 
 # ============================================================
-# 6. SKEWNESS + KURTOSIS
+# 6. SKEWNESS / KURTOSIS
 # ============================================================
 
 skew_rows = []
@@ -783,19 +657,9 @@ for feature in candidate_features:
     ).dropna()
 
     skew_rows.append({
-
-        "Feature":
-            feature,
-
-        "Skewness":
-            values.skew()
-            if len(values)
-            else np.nan,
-
-        "Kurtosis":
-            values.kurtosis()
-            if len(values)
-            else np.nan
+        "Feature": feature,
+        "Skewness": values.skew() if len(values) else np.nan,
+        "Kurtosis": values.kurtosis() if len(values) else np.nan
     })
 
 skew_df = pd.DataFrame(
@@ -813,27 +677,17 @@ save_csv(
 
 if not skew_df.empty:
 
-    skew_plot = (
-        skew_df
-        .dropna(subset=["Skewness"])
-        .sort_values("Skewness")
-    )
+    plot = skew_df.dropna(
+        subset=["Skewness"]
+    ).sort_values("Skewness")
 
-    plt.figure(
-        figsize=(10, 6)
-    )
-
+    plt.figure(figsize=(10, 6))
     plt.barh(
-        skew_plot["Feature"],
-        skew_plot["Skewness"]
+        plot["Feature"],
+        plot["Skewness"]
     )
-
     plt.axvline(0)
-
-    plt.title(
-        "Feature Skewness"
-    )
-
+    plt.title("Feature Skewness")
     plt.xlabel("Skewness")
     plt.ylabel("Feature")
 
@@ -853,12 +707,8 @@ X_train_diag = diagnostic_impute(
 train_corr = X_train_diag.corr()
 
 save_csv(
-    train_corr
-    .reset_index()
-    .rename(
-        columns={
-            "index": "Feature"
-        }
+    train_corr.reset_index().rename(
+        columns={"index": "Feature"}
     ),
     "05_training_correlation_matrix.csv"
 )
@@ -873,9 +723,8 @@ save_csv(
     "06_training_high_correlation_pairs.csv"
 )
 
-plt.figure(
-    figsize=(13, 10)
-)
+# Correlation plot
+plt.figure(figsize=(13, 10))
 
 plt.imshow(
     train_corr.values,
@@ -907,7 +756,7 @@ save_plot(
 
 
 # ============================================================
-# 8. VIF
+# 8. TRAINING-ONLY VIF
 # ============================================================
 
 initial_vif = vif_table(
@@ -919,26 +768,20 @@ save_csv(
     "07_vif_initial.csv"
 )
 
+# Plot initial VIF
 if not initial_vif.empty:
 
     vif_plot = (
         initial_vif
-        .replace(
-            [np.inf, -np.inf],
-            np.nan
-        )
-        .dropna(
-            subset=["VIF"]
-        )
+        .replace([np.inf, -np.inf], np.nan)
+        .dropna(subset=["VIF"])
         .head(20)
         .sort_values("VIF")
     )
 
     if not vif_plot.empty:
 
-        plt.figure(
-            figsize=(10, 7)
-        )
+        plt.figure(figsize=(10, 7))
 
         plt.barh(
             vif_plot["Feature"],
@@ -968,33 +811,25 @@ if not initial_vif.empty:
 
 features_to_drop = set()
 
+# Remove one feature from highly correlated pairs.
 for _, row in corr_pairs.iterrows():
 
     f1 = row["Feature_1"]
     f2 = row["Feature_2"]
 
     missing_f1 = (
-        X_train_candidate[f1]
-        .isna()
-        .mean()
+        X_train_candidate[f1].isna().mean()
     )
 
     missing_f2 = (
-        X_train_candidate[f2]
-        .isna()
-        .mean()
+        X_train_candidate[f2].isna().mean()
     )
 
     if missing_f1 > missing_f2:
-
         features_to_drop.add(f1)
-
     elif missing_f2 > missing_f1:
-
         features_to_drop.add(f2)
-
     else:
-
         features_to_drop.add(
             max(f1, f2)
         )
@@ -1005,6 +840,7 @@ final_features = [
     if feature not in features_to_drop
 ]
 
+# Remove highest VIF repeatedly.
 while len(final_features) >= 2:
 
     current_vif = vif_table(
@@ -1026,20 +862,21 @@ while len(final_features) >= 2:
     if highest["VIF"] <= VIF_THRESHOLD:
         break
 
-    remove = highest["Feature"]
+    feature_to_remove = (
+        highest["Feature"]
+    )
 
     final_features.remove(
-        remove
+        feature_to_remove
     )
 
     features_to_drop.add(
-        remove
+        feature_to_remove
     )
 
 if not final_features:
-
     raise ValueError(
-        "No features remain after screening."
+        "No features remain after correlation/VIF screening."
     )
 
 final_vif = vif_table(
@@ -1053,63 +890,42 @@ save_csv(
     "11_vif_final_features.csv"
 )
 
-
-# ============================================================
-# FINAL FEATURE DECISIONS
-# ============================================================
-
 final_decisions = []
 
 for column in df.columns:
 
     if column == TARGET:
-
         decision = "SKIP"
         reason = "Target variable"
 
     elif column in final_features:
-
         decision = "APPLY"
-        reason = (
-            "Final model predictor"
-        )
+        reason = "Final model predictor"
 
     elif column in features_to_drop:
-
         decision = "SKIP"
         reason = (
-            "Removed by training-only "
-            "high correlation and/or high VIF"
+            "Removed by training-only high correlation "
+            "and/or high VIF"
         )
 
     else:
 
-        original = audit_df[
+        row = audit_df[
             audit_df["Column"] == column
         ]
 
         decision = "SKIP"
 
-        if not original.empty:
-
-            reason = original[
-                "Reason"
-            ].iloc[0]
-
+        if not row.empty:
+            reason = row["Reason"].iloc[0]
         else:
-
             reason = "Not selected"
 
     final_decisions.append({
-
-        "Column":
-            column,
-
-        "Decision":
-            decision,
-
-        "Reason":
-            reason
+        "Column": column,
+        "Decision": decision,
+        "Reason": reason
     })
 
 final_decisions_df = pd.DataFrame(
@@ -1123,43 +939,31 @@ save_csv(
 
 save_csv(
     pd.DataFrame({
-
-        "Feature_Number":
-            range(
-                1,
-                len(final_features) + 1
-            ),
-
-        "Feature":
-            final_features
+        "Feature_Number": range(
+            1,
+            len(final_features) + 1
+        ),
+        "Feature": final_features
     }),
     "13_features_applied.csv"
 )
 
-print(
-    "\nFINAL FEATURES APPLIED:",
-    len(final_features)
-)
+print("\nFINAL FEATURES APPLIED:", len(final_features))
 
 for feature in final_features:
-    print(
-        " +",
-        feature
-    )
+    print(" +", feature)
 
-print(
-    "\nFINAL SKIPPED:",
-    int(
-        (
-            final_decisions_df["Decision"]
-            == "SKIP"
-        ).sum()
+print("\nFINAL SKIPPED:")
+for _, row in final_decisions_df[
+    final_decisions_df["Decision"] == "SKIP"
+].iterrows():
+    print(
+        f" - {row['Column']} -> {row['Reason']}"
     )
-)
 
 
 # ============================================================
-# 10. CLASS IMBALANCE
+# 10. IMBALANCE BEFORE / AFTER
 # ============================================================
 
 train_counts = (
@@ -1179,17 +983,9 @@ before_repeat = int(
     train_counts.loc[1]
 )
 
-print(
-    "\n" + "=" * 85
-)
-
-print(
-    "CLASS IMBALANCE"
-)
-
-print(
-    "=" * 85
-)
+print("\n" + "=" * 85)
+print("CLASS IMBALANCE")
+print("=" * 85)
 
 print(
     "TRAIN BEFORE:",
@@ -1226,7 +1022,7 @@ else:
         "RandomOverSampler fallback"
     )
 
-# Diagnostic balancing.
+# Diagnostic class balancing only for reporting.
 balance_input = diagnostic_impute(
     X_train_candidate[
         final_features
@@ -1234,14 +1030,11 @@ balance_input = diagnostic_impute(
 )
 
 if before_repeat >= 2:
-
     sampler = SMOTE(
         random_state=RANDOM_STATE,
         k_neighbors=smote_k
     )
-
 else:
-
     sampler = RandomOverSampler(
         random_state=RANDOM_STATE
     )
@@ -1295,96 +1088,59 @@ print(
 
 save_csv(
     pd.DataFrame({
-
         "Metric": [
-
             "One-Time Before",
             "Repeat Before",
-
             "One-Time % Before",
             "Repeat % Before",
-
             "Ratio Before",
-
             "Balancing Method",
-
             "One-Time After",
             "Repeat After",
-
             "One-Time % After",
             "Repeat % After",
-
             "Ratio After",
-
             "Test Set Changed"
         ],
-
         "Value": [
-
             before_one_time,
             before_repeat,
-
-            before_one_time /
-            len(y_train) * 100,
-
-            before_repeat /
-            len(y_train) * 100,
-
+            before_one_time / len(y_train) * 100,
+            before_repeat / len(y_train) * 100,
             ratio(
                 before_one_time,
                 before_repeat
             ),
-
             method_name,
-
             after_one_time,
             after_repeat,
-
-            after_one_time /
-            len(y_after) * 100,
-
-            after_repeat /
-            len(y_after) * 100,
-
+            after_one_time / len(y_after) * 100,
+            after_repeat / len(y_after) * 100,
             ratio(
                 after_one_time,
                 after_repeat
             ),
-
             "NO"
         ]
     }),
     "14_imbalance_before_after.csv"
 )
 
-
-# ============================================================
-# IMBALANCE PLOT
-# ============================================================
-
 positions = np.arange(2)
 width = 0.35
 
-plt.figure(
-    figsize=(9, 6)
-)
+plt.figure(figsize=(9, 6))
 
 plt.bar(
     positions - width / 2,
-    [
-        before_one_time,
-        after_one_time
-    ],
+    [before_one_time, after_one_time],
     width,
     label="One-Time"
 )
 
 plt.bar(
     positions + width / 2,
-    [
-        before_repeat,
-        after_repeat
-    ],
+    [before_repeat, after_repeat],
     width,
     label="Repeat"
 )
@@ -1399,8 +1155,7 @@ plt.title(
 )
 
 plt.xlabel("Stage")
-plt.ylabel("Training Samples")
-
+plt.ylabel("Samples")
 plt.legend()
 
 save_plot(
@@ -1413,14 +1168,11 @@ save_plot(
 # ============================================================
 
 def new_sampler():
-
     if before_repeat >= 2:
-
         return SMOTE(
             random_state=RANDOM_STATE,
             k_neighbors=smote_k
         )
-
     return RandomOverSampler(
         random_state=RANDOM_STATE
     )
@@ -1429,19 +1181,14 @@ def new_sampler():
 models = {
 
     "Logistic Regression": Pipeline([
-
         (
             "imputer",
-            SimpleImputer(
-                strategy="median"
-            )
+            SimpleImputer(strategy="median")
         ),
-
         (
             "sampler",
             new_sampler()
         ),
-
         (
             "power",
             PowerTransformer(
@@ -1449,12 +1196,10 @@ models = {
                 standardize=False
             )
         ),
-
         (
             "scaler",
             StandardScaler()
         ),
-
         (
             "model",
             LogisticRegression(
@@ -1465,19 +1210,14 @@ models = {
     ]),
 
     "Random Forest": Pipeline([
-
         (
             "imputer",
-            SimpleImputer(
-                strategy="median"
-            )
+            SimpleImputer(strategy="median")
         ),
-
         (
             "sampler",
             new_sampler()
         ),
-
         (
             "model",
             RandomForestClassifier(
@@ -1491,19 +1231,14 @@ models = {
     ]),
 
     "Gradient Boosting": Pipeline([
-
         (
             "imputer",
-            SimpleImputer(
-                strategy="median"
-            )
+            SimpleImputer(strategy="median")
         ),
-
         (
             "sampler",
             new_sampler()
         ),
-
         (
             "model",
             GradientBoostingClassifier(
@@ -1535,10 +1270,7 @@ model_outputs = {}
 
 for name, model in models.items():
 
-    print(
-        "\nTraining:",
-        name
-    )
+    print("\nTraining:", name)
 
     model.fit(
         X_train,
@@ -1554,48 +1286,34 @@ for name, model in models.items():
     )[:, 1]
 
     results.append({
-
-        "Model":
-            name,
-
-        "Accuracy":
-            accuracy_score(
-                y_test,
-                pred
-            ),
-
-        "Precision":
-            precision_score(
-                y_test,
-                pred,
-                zero_division=0
-            ),
-
-        "Recall":
-            recall_score(
-                y_test,
-                pred,
-                zero_division=0
-            ),
-
-        "F1_Score":
-            f1_score(
-                y_test,
-                pred,
-                zero_division=0
-            ),
-
-        "ROC_AUC":
-            roc_auc_score(
-                y_test,
-                prob
-            ),
-
-        "PR_AUC":
-            average_precision_score(
-                y_test,
-                prob
-            )
+        "Model": name,
+        "Accuracy": accuracy_score(
+            y_test,
+            pred
+        ),
+        "Precision": precision_score(
+            y_test,
+            pred,
+            zero_division=0
+        ),
+        "Recall": recall_score(
+            y_test,
+            pred,
+            zero_division=0
+        ),
+        "F1_Score": f1_score(
+            y_test,
+            pred,
+            zero_division=0
+        ),
+        "ROC_AUC": roc_auc_score(
+            y_test,
+            prob
+        ),
+        "PR_AUC": average_precision_score(
+            y_test,
+            prob
+        )
     })
 
     trained_models[name] = model
@@ -1604,7 +1322,6 @@ for name, model in models.items():
         "pred": pred,
         "prob": prob
     }
-
 
 comparison = (
     pd.DataFrame(results)
@@ -1624,24 +1341,14 @@ save_csv(
     "15_model_comparison.csv"
 )
 
-print(
-    "\nMODEL COMPARISON"
-)
-
+print("\nMODEL COMPARISON")
 print(
     comparison.to_string(
         index=False
     )
 )
 
-
-# ============================================================
-# MODEL COMPARISON PLOT
-# ============================================================
-
-plt.figure(
-    figsize=(10, 6)
-)
+plt.figure(figsize=(10, 6))
 
 plt.bar(
     comparison["Model"],
@@ -1654,11 +1361,7 @@ plt.title(
 
 plt.xlabel("Model")
 plt.ylabel("PR-AUC")
-
-plt.ylim(
-    0,
-    1
-)
+plt.ylim(0, 1)
 
 plt.xticks(
     rotation=15
@@ -1723,61 +1426,25 @@ pr_auc = average_precision_score(
     y_prob
 )
 
-print(
-    "\n" + "=" * 85
-)
+print("\n" + "=" * 85)
+print("BEST MODEL")
+print("=" * 85)
 
-print(
-    "BEST MODEL"
-)
-
-print(
-    "=" * 85
-)
-
-print(
-    "Model    :",
-    best_name
-)
-
-print(
-    "Accuracy :",
-    round(accuracy, 4)
-)
-
-print(
-    "Precision:",
-    round(precision, 4)
-)
-
-print(
-    "Recall   :",
-    round(recall, 4)
-)
-
-print(
-    "F1 Score :",
-    round(f1, 4)
-)
-
-print(
-    "ROC-AUC  :",
-    round(roc_auc, 4)
-)
-
-print(
-    "PR-AUC   :",
-    round(pr_auc, 4)
-)
+print("Model    :", best_name)
+print("Accuracy :", round(accuracy, 4))
+print("Precision:", round(precision, 4))
+print("Recall   :", round(recall, 4))
+print("F1 Score :", round(f1, 4))
+print("ROC-AUC  :", round(roc_auc, 4))
+print("PR-AUC   :", round(pr_auc, 4))
 
 
 # ============================================================
-# 14. FINAL METRICS
+# 14. METRICS
 # ============================================================
 
 save_csv(
     pd.DataFrame({
-
         "Metric": [
             "Accuracy",
             "Precision",
@@ -1786,7 +1453,6 @@ save_csv(
             "ROC_AUC",
             "PR_AUC"
         ],
-
         "Score": [
             accuracy,
             precision,
@@ -1799,8 +1465,6 @@ save_csv(
     "16_final_metrics.csv"
 )
 
-
-# Classification report
 report = classification_report(
     y_test,
     y_pred,
@@ -1817,9 +1481,7 @@ save_csv(
     .T
     .reset_index()
     .rename(
-        columns={
-            "index": "Class"
-        }
+        columns={"index": "Class"}
     ),
     "17_classification_report.csv"
 )
@@ -1835,13 +1497,9 @@ cm = confusion_matrix(
     labels=[0, 1]
 )
 
-plt.figure(
-    figsize=(7, 6)
-)
+plt.figure(figsize=(7, 6))
 
-plt.imshow(
-    cm
-)
+plt.imshow(cm)
 
 plt.title(
     f"Confusion Matrix - {best_name}"
@@ -1852,24 +1510,16 @@ plt.ylabel("Actual")
 
 plt.xticks(
     [0, 1],
-    [
-        "One-Time",
-        "Repeat"
-    ]
+    ["One-Time", "Repeat"]
 )
 
 plt.yticks(
     [0, 1],
-    [
-        "One-Time",
-        "Repeat"
-    ]
+    ["One-Time", "Repeat"]
 )
 
 for i in range(2):
-
     for j in range(2):
-
         plt.text(
             j,
             i,
@@ -1884,7 +1534,7 @@ save_plot(
 
 
 # ============================================================
-# 16. ROC CURVE
+# 16. ROC
 # ============================================================
 
 fpr, tpr, _ = roc_curve(
@@ -1892,9 +1542,7 @@ fpr, tpr, _ = roc_curve(
     y_prob
 )
 
-plt.figure(
-    figsize=(8, 6)
-)
+plt.figure(figsize=(8, 6))
 
 plt.plot(
     fpr,
@@ -1928,23 +1576,19 @@ save_plot(
 
 
 # ============================================================
-# 17. PRECISION-RECALL CURVE
+# 17. PRECISION-RECALL
 # ============================================================
 
-precision_curve, recall_curve, _ = (
-    precision_recall_curve(
-        y_test,
-        y_prob
-    )
+p, r, _ = precision_recall_curve(
+    y_test,
+    y_prob
 )
 
-plt.figure(
-    figsize=(8, 6)
-)
+plt.figure(figsize=(8, 6))
 
 plt.plot(
-    recall_curve,
-    precision_curve,
+    r,
+    p,
     label=f"PR-AUC = {pr_auc:.3f}"
 )
 
@@ -1952,14 +1596,8 @@ plt.title(
     f"Precision-Recall Curve - {best_name}"
 )
 
-plt.xlabel(
-    "Recall"
-)
-
-plt.ylabel(
-    "Precision"
-)
-
+plt.xlabel("Recall")
+plt.ylabel("Precision")
 plt.legend()
 
 save_plot(
@@ -2000,13 +1638,8 @@ else:
     )
 
 importance = pd.DataFrame({
-
-    "Feature":
-        final_features,
-
-    "Importance":
-        importance_values
-
+    "Feature": final_features,
+    "Importance": importance_values
 }).sort_values(
     "Importance",
     ascending=False
@@ -2020,14 +1653,10 @@ save_csv(
 top = (
     importance
     .head(15)
-    .sort_values(
-        "Importance"
-    )
+    .sort_values("Importance")
 )
 
-plt.figure(
-    figsize=(10, 7)
-)
+plt.figure(figsize=(10, 7))
 
 plt.barh(
     top["Feature"],
@@ -2038,9 +1667,7 @@ plt.title(
     f"Feature Importance - {best_name}"
 )
 
-plt.xlabel(
-    "Importance"
-)
+plt.xlabel("Importance")
 
 save_plot(
     "06_feature_importance.png"
@@ -2057,23 +1684,17 @@ actual = (
     .to_numpy()
 )
 
-plt.figure(
-    figsize=(9, 6)
-)
+plt.figure(figsize=(9, 6))
 
 plt.hist(
-    y_prob[
-        actual == 0
-    ],
+    y_prob[actual == 0],
     bins=30,
     alpha=0.7,
     label="Actual One-Time"
 )
 
 plt.hist(
-    y_prob[
-        actual == 1
-    ],
+    y_prob[actual == 1],
     bins=30,
     alpha=0.7,
     label="Actual Repeat"
@@ -2133,13 +1754,11 @@ save_csv(
 
 skipped = int(
     (
-        final_decisions_df["Decision"]
-        == "SKIP"
+        final_decisions_df["Decision"] == "SKIP"
     ).sum()
 )
 
 summary = pd.DataFrame({
-
     "Item": [
 
         "Dataset Rows",
@@ -2226,7 +1845,7 @@ save_csv(
 # 22. README
 # ============================================================
 
-README = f"""
+readme = f"""
 # Olist Final Expert ML
 
 ## Objective
@@ -2288,53 +1907,31 @@ F1: {f1:.4f}
 ROC-AUC: {roc_auc:.4f}
 PR-AUC: {pr_auc:.4f}
 
-## Output folders
+## Folders
 tables/
 plots/
 """
 
-(
-    OUTPUT_DIR / "README.md"
-).write_text(
-    README,
+(OUTPUT_DIR / "README.md").write_text(
+    readme,
     encoding="utf-8"
 )
 
 
 # ============================================================
-# 23. FINAL CONSOLE REPORT
+# 23. FINAL CONSOLE OUTPUT
 # ============================================================
 
-print(
-    "\n" + "=" * 90
-)
-
-print(
-    "FINAL ML REPORT"
-)
-
-print(
-    "=" * 90
-)
+print("\n" + "=" * 90)
+print("FINAL ML REPORT")
+print("=" * 90)
 
 print("\nFEATURES")
-print(
-    "Candidate:",
-    len(candidate_features)
-)
-
-print(
-    "Applied  :",
-    len(final_features)
-)
-
-print(
-    "Skipped  :",
-    skipped
-)
+print("Candidate:", len(candidate_features))
+print("Applied  :", len(final_features))
+print("Skipped  :", skipped)
 
 print("\nIMBALANCE")
-
 print(
     "BEFORE:",
     ratio(
@@ -2342,12 +1939,10 @@ print(
         before_repeat
     )
 )
-
 print(
     "METHOD:",
     method_name
 )
-
 print(
     "AFTER :",
     ratio(
@@ -2355,73 +1950,22 @@ print(
         after_repeat
     )
 )
-
-print(
-    "TEST CHANGED: NO"
-)
+print("TEST CHANGED: NO")
 
 print("\nBEST MODEL")
-
-print(
-    "Model   :",
-    best_name
-)
-
-print(
-    "Accuracy:",
-    round(accuracy, 4)
-)
-
-print(
-    "Precision:",
-    round(precision, 4)
-)
-
-print(
-    "Recall  :",
-    round(recall, 4)
-)
-
-print(
-    "F1      :",
-    round(f1, 4)
-)
-
-print(
-    "ROC-AUC :",
-    round(roc_auc, 4)
-)
-
-print(
-    "PR-AUC  :",
-    round(pr_auc, 4)
-)
+print("Model   :", best_name)
+print("Accuracy:", round(accuracy, 4))
+print("Precision:", round(precision, 4))
+print("Recall  :", round(recall, 4))
+print("F1      :", round(f1, 4))
+print("ROC-AUC :", round(roc_auc, 4))
+print("PR-AUC  :", round(pr_auc, 4))
 
 print("\nOUTPUT")
+print("Tables:", TABLE_DIR)
+print("Plots :", PLOT_DIR)
+print("README:", OUTPUT_DIR / "README.md")
 
-print(
-    "Tables:",
-    TABLE_DIR
-)
-
-print(
-    "Plots :",
-    PLOT_DIR
-)
-
-print(
-    "README:",
-    OUTPUT_DIR / "README.md"
-)
-
-print(
-    "\n" + "=" * 90
-)
-
-print(
-    "MACHINE LEARNING ANALYSIS COMPLETED SUCCESSFULLY"
-)
-
-print(
-    "=" * 90
-)
+print("\n" + "=" * 90)
+print("MACHINE LEARNING ANALYSIS COMPLETED SUCCESSFULLY")
+print("=" * 90)

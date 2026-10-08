@@ -1,0 +1,22 @@
+Column,Data_Type,Missing_Count,Missing_Percentage,Unique_Count,Decision,Reason
+order_id,str,0,0.0,99441,SKIP,Identifier / key column
+customer_id,str,0,0.0,99441,SKIP,Identifier / key column
+customer_unique_id,str,0,0.0,96096,SKIP,Identifier / key column
+order_status,str,0,0.0,8,SKIP,Non-numeric categorical/text column
+order_purchase_timestamp,str,0,0.0,98875,SKIP,Non-numeric categorical/text column
+order_month,str,0,0.0,25,SKIP,Non-numeric categorical/text column
+cohort_month,str,0,0.0,25,SKIP,Non-numeric categorical/text column
+customer_city,str,0,0.0,4119,SKIP,Non-numeric categorical/text column
+customer_state,str,0,0.0,27,SKIP,Non-numeric categorical/text column
+total_items,float64,775,0.7794,17,USE,Eligible numeric predictor
+order_item_value,float64,775,0.7794,7621,USE,Eligible numeric predictor
+total_freight_value,float64,775,0.7794,7698,USE,Eligible numeric predictor
+order_approved_at,str,160,0.1609,90733,SKIP,Non-numeric categorical/text column
+order_delivered_carrier_date,str,1783,1.793,81018,SKIP,Non-numeric categorical/text column
+order_delivered_customer_date,str,2965,2.9817,95664,SKIP,Non-numeric categorical/text column
+order_estimated_delivery_date,str,0,0.0,459,SKIP,Non-numeric categorical/text column
+Purchase_Month,str,0,0.0,25,SKIP,Non-numeric categorical/text column
+First_Purchase_Date,str,0,0.0,95837,SKIP,Non-numeric categorical/text column
+Cohort_Month,str,0,0.0,25,SKIP,Non-numeric categorical/text column
+Cohort_Index,int64,0,0.0,20,USE,Eligible numeric predictor
+repeat_customer,int64,0,0.0,2,SKIP,Target variable

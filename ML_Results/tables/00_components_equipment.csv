@@ -1,0 +1,13 @@
+Component,Purpose
+Python,Programming
+Pandas,Data processing
+NumPy,Numerical analysis
+Matplotlib,Visualization
+Scikit-learn,"Preprocessing, models and metrics"
+Statsmodels,VIF / multicollinearity
+Imbalanced-learn,SMOTE / oversampling
+Target,Repeat vs One-Time classification
+Split,Customer-level grouped split
+Balancing,SMOTE on training only
+Models,"Logistic, Random Forest, Gradient Boosting"
+Primary Metric,PR-AUC for imbalanced classification

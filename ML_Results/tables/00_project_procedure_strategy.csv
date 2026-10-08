@@ -1,0 +1,13 @@
+Step,Procedure,Strategy
+1,Load data,Use Olist cohort dataset
+2,Detect customer/order columns,Use IDs only for grouping/target construction
+3,Create repeat-customer target,Repeat = more than one distinct order
+4,Feature audit,"Exclude IDs, leakage, non-numeric, constant and high-missing fields"
+5,Skewness and kurtosis,Understand distribution shape before modeling
+6,Correlation and VIF,Reduce multicollinearity using training data only
+7,Customer-level train/test split,Keep customers separated between train and test
+8,Measure class imbalance,Measure real class ratio first
+9,SMOTE on training data only,Balance only training data
+10,Train and compare models,Compare three classifiers
+11,Evaluate on untouched test set,Do not rebalance test data
+12,"Save all tables, plots and documentation",Create GitHub-ready outputs

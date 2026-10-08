@@ -1,0 +1,13 @@
+Metric,Value
+One-Time Before,74479
+Repeat Before,5073
+One-Time % Before,93.62303901850362
+Repeat % Before,6.37696098149638
+Ratio Before,14.68:1
+Balancing Method,SMOTE (k_neighbors=5)
+One-Time After,74479
+Repeat After,74479
+One-Time % After,50.0
+Repeat % After,50.0
+Ratio After,1.00:1
+Test Set Changed,NO

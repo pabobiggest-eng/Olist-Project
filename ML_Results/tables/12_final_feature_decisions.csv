@@ -1,0 +1,22 @@
+Column,Decision,Reason
+order_id,SKIP,Identifier / key column
+customer_id,SKIP,Identifier / key column
+customer_unique_id,SKIP,Identifier / key column
+order_status,SKIP,Non-numeric categorical/text column
+order_purchase_timestamp,SKIP,Non-numeric categorical/text column
+order_month,SKIP,Non-numeric categorical/text column
+cohort_month,SKIP,Non-numeric categorical/text column
+customer_city,SKIP,Non-numeric categorical/text column
+customer_state,SKIP,Non-numeric categorical/text column
+total_items,APPLY,Final model predictor
+order_item_value,APPLY,Final model predictor
+total_freight_value,APPLY,Final model predictor
+order_approved_at,SKIP,Non-numeric categorical/text column
+order_delivered_carrier_date,SKIP,Non-numeric categorical/text column
+order_delivered_customer_date,SKIP,Non-numeric categorical/text column
+order_estimated_delivery_date,SKIP,Non-numeric categorical/text column
+Purchase_Month,SKIP,Non-numeric categorical/text column
+First_Purchase_Date,SKIP,Non-numeric categorical/text column
+Cohort_Month,SKIP,Non-numeric categorical/text column
+Cohort_Index,APPLY,Final model predictor
+repeat_customer,SKIP,Target variable

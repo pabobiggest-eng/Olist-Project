@@ -1,0 +1,23 @@
+Item,Value
+Dataset Rows,99441
+Dataset Columns,21
+Customer Column,customer_unique_id
+Order Column,order_id
+Target,repeat_customer
+Candidate Features,4
+Applied Features,4
+Skipped Features,17
+Training Rows,79552
+Testing Rows,19889
+Ratio Before,14.68:1
+Ratio After,1.00:1
+Balancing Method,SMOTE (k_neighbors=5)
+Customer Leakage,NO
+Test Set Balanced,NO
+Best Model,Logistic Regression
+Accuracy,0.9098999446930464
+Precision,0.31928127159640635
+Recall,0.3640661938534279
+F1 Score,0.3402061855670103
+ROC-AUC,0.6845370984028798
+PR-AUC,0.4102788736474642

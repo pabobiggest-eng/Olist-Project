@@ -1,0 +1,5 @@
+Feature_Number,Feature
+1,total_items
+2,order_item_value
+3,total_freight_value
+4,Cohort_Index
