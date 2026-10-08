@@ -1,0 +1,4 @@
+Item,Value
+Date Column,order_purchase_timestamp
+Date Status,Detected and parsed
+Valid Date Percentage,100.0

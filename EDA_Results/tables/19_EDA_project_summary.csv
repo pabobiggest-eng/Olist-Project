@@ -1,0 +1,17 @@
+Metric,Value
+Original Rows,99441
+Final Rows,99441
+Original Columns,20
+Final Columns,20
+Duplicate Rows Removed,0
+Numeric Columns,4
+Categorical Columns,15
+Date Column,order_purchase_timestamp
+Customer Column,customer_unique_id
+Order Column,order_id
+Value Column,order_item_value
+Freight Column,total_freight_value
+Repeat Customers,2997
+Repeat Customer Percentage,3.1187562437562435
+One-Time Customers,93099
+One-Time Customer Percentage,96.88124375624375

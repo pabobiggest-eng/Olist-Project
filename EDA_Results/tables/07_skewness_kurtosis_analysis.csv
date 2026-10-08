@@ -1,0 +1,5 @@
+Column,Skewness,Kurtosis,Distribution_Assessment
+total_freight_value,12.052722636430127,565.3417320054863,Highly Right-Skewed
+Cohort_Index,11.626033796251626,155.97082648090884,Highly Right-Skewed
+order_item_value,9.72774072310121,266.0669390206724,Highly Right-Skewed
+total_items,7.527005581709165,114.85034084882795,Highly Right-Skewed
